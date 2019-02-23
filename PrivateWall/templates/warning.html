@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+            <meta charset="UTF-8">
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Private Wall</title>
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                {% with regis = get_flashed_messages(category_filter=["logout"]) %}
+                    {% if regis %}
+                        {%- for msg in regis %}
+                        <p class='flash_error'>{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+            </div>
+            <div class='main'>
+                <h1 class='flash_error'>Danger!</h1>
+                <p>The message you are trying to delete does not belong to you.</p>
+                <p>Do not try to hack my site.</p>
+                <br>
+                <p>Your ip address is {{ip}} and your hostname is {{host}}</p>
+                <br>
+                <p>Next time you attempt an activity like this</p>
+                <p>we will report your ip address to our administrator.</p>
+            </div>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+            <meta charset="UTF-8">
+            <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+            <meta http-equiv="X-UA-Compatible" content="ie=edge">
+            <title>Private Wall</title>
+            <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+    </head>
+    <body>
+        <div class='container'>
+            <div class='header'>
+                <h3>Wall One</h3>
+                {% with regis = get_flashed_messages(category_filter=["success"]) %}
+                    {% if regis %}
+                        {%- for msg in regis %}
+                        <p class='flash_valid'>{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                {% with regis = get_flashed_messages(category_filter=["logout"]) %}
+                    {% if regis %}
+                        {%- for msg in regis %}
+                        <p class='flash_error'>{{ msg }}</p>
+                        {% endfor -%}
+                    {% endif %}
+                {% endwith %}
+                <br>
+                <h1>Welcome, you've been logged in, {{fname}}!</h1>
+                <br>
+                <a href='/logout'>Logout</a>
+            </div>
+            <div class='main'>
+                <div class='mainheader'>
+                    <h1>CodingDojo Wall</h1>
+                    <br>
+                    <h3>Welcome, {{fname}}!</h3>
+                    <a href='/logout'>Log Out</a>
+                    <hr>
+                </div>
+                <div class='box' id='leftbox'>
+                    <h3>{{num_o_msg}} Message(s) for You</h3>
+                    {% for m in msgInfo %}
+                        <label>{{sender}} said (at {{ m['messages.created_at'] }}):</label>
+                        <p>{{ m['message'] }}</p>
+                        <a href="/delete/{{m['message_id']}}"><img src="{{ url_for('static', filename='img/recycle.jpg') }}"></a>
+                    {% endfor %}
+                </div>
+                <div class='box' id='middlebox'>
+                        <h2></h2>
+                    </div>
+                <div class='box' id='rightbox'>
+                    <h3>Send Messages</h3>
+                    <p>You have sent {{msgs_sent}} messages so far</p>                    
+                    {% with msg_ctr = get_flashed_messages(category_filter=["msg_ctr"]) %}
+                        {% if msg_ctr %}
+                        <ul>
+                            {%- for msg in msg_ctr %}
+                            <li class='flash_valid'>{{ msg }}</li>
+                            {% endfor -%}
+                        </ul>
+                        {% endif %}
+                    {% endwith %}
+                    <form class='loginform' action="/send" method="POST">
+                        {% for x in dbInfo %}
+                            {%- if x['first_name'] != fname: %}
+                            <div>
+                                {{x['first_name']}}: <input type='text' name='message' class='inputbox'>
+                                <input type='submit' id='button' value='Send'>
+                                <input type='hidden' name='recipient_name' value="'{{x['first_name']}}'">
+                            </div>
+                            {% endif %}
+                        {% endfor %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
